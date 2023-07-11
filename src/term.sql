@@ -698,7 +698,7 @@ postgres=# select * from people where phone_number like in ('%55%','%22%', '%80%
 ОШИБКА:  ошибка синтаксиса (примерное положение: "in")
 СТРОКА 1: select * from people where phone_number like in ('%55%','%22...
                                                        ^
-postgres=# select * from people where phone_number like '%55%' or phone_number like '%22%' or phone_number like '%80%';
+postgres=#  select * from people where phone_number like '%55%' or phone_number like '%22%' or phone_number like '%80%';
  id | first_name |   last_name   | age | gender |        address        |  phone_number  |            email
 |       occupation        |  nationality   |               education                |  languages  | is_married | has_children | height | weight
 ----+------------+---------------+-----+--------+-----------------------+----------------+------------------------------+-------------------------+----------------+----------------------------------------+-------------+------------+--------------+--------+--------
@@ -759,3 +759,171 @@ postgres=# select * from people height order by height desc limit 3;
  40 | Aelita     | Nazirbek kyzy |  26 | F      | Bokonbaeva 23         | +996555999444 | aelita@gmail.com        | Teacher          | Kyrgyz      | Higer                           | Rus       | t          | t            | 170.51 |   50.5
  29 | Sari       | Crich         |  74 | F      | 77609 Evergreen Alley | 63.63.100.182 | scrichs@stumbleupon.com | Registered Nurse | Indonesia   | Universitas Bunda Mulia Jakarta | Georgian  | t          | f            |     99 |     21
 (3 ёЄЁюъш)
+postgres=# select * from people where is_married=true order by weight limit 5
+postgres-# ;
+ id | first_name | last_name | age | gender |         address         |  phone_number  |          email          |    occupation     | nationality |                education                 | languages  | is_married | has_children | height | weight
+----+------------+-----------+-----+--------+-------------------------+----------------+-------------------------+-------------------+-------------+------------------------------------------+------------+------------+--------------+--------+--------
+ 28 | Manny      | Pepineaux |  35 | M      | 66 International Circle | 75.133.39.246  | mpepineauxr@shop-pro.jp | Nurse             | Indonesia   | Universitas Bojonegoro                   | Bengali    | t          | t            |     93 |     19
+ 29 | Sari       | Crich     |  74 | F      | 77609 Evergreen Alley   | 63.63.100.182  | scrichs@stumbleupon.com | Registered Nurse  | Indonesia   | Universitas Bunda Mulia Jakarta          | Georgian   | t          | f            |     99 |     21
+ 23 | Gustave    | Jahnke    |  23 | M      | 4764 Hagan Avenue       | 72.219.226.14  | gjahnkem@msu.edu        | Media Manager III | Indonesia   | Sekolah Tinggi Akuntansi Negara (STAN)   | Albanian   | t          | f            |     24 |     26
+ 16 | Luce       | Atwel     |  30 | M      | 5 Carioca Parkway       | 111.114.48.233 | latwelf@pcworld.com     | Paralegal         | Philippines | Our Lady of Fatima University            | Indonesian | t          | f            |     89 |     28
+ 22 | Debora     | Vreiberg  |  55 | F      | 158 Miller Alley        | 190.192.87.75  | dvreibergl@skyrock.com  | Senior Developer  | Russia      | Nevsky Institute of Language and Culture | Greek      | t          | f            |     94 |     37
+(5 ёЄЁюъ)
+
+
+postgres=# select * from people where is_married=true avg(is_married);
+ОШИБКА:  ошибка синтаксиса (примерное положение: "avg")
+СТРОКА 1: select * from people where is_married=true avg(is_married);
+                                                     ^
+postgres=# select * from people where is_married=true avg(age);
+ОШИБКА:  ошибка синтаксиса (примерное положение: "avg")
+СТРОКА 1: select * from people where is_married=true avg(age);
+                                                     ^
+postgres=#  select * from people where is_married=true (select avg(age) from people);
+ОШИБКА:  ошибка синтаксиса (примерное положение: "(")
+СТРОКА 1: select * from people where is_married=true (select avg(age) ...
+                                                     ^
+postgres=# select avg
+postgres-#
+postgres-# ;
+ОШИБКА:  столбец "avg" не существует
+СТРОКА 1: select avg
+                 ^
+postgres=# select avg(age) from people where  is_married=true;
+         avg
+---------------------
+ 51.6666666666666667
+(1 ёЄЁюър)
+
+
+postgres=# celect avg(weight) from people where occupation is not null;
+ОШИБКА:  ошибка синтаксиса (примерное положение: "celect")
+СТРОКА 1: celect avg(weight) from people where occupation is not null;
+          ^
+postgres=#  celect sum(weight) from people where occupation is not null;
+ОШИБКА:  ошибка синтаксиса (примерное положение: "celect")
+СТРОКА 1: celect sum(weight) from people where occupation is not null;
+          ^
+postgres=# celect * sum(weight) from people where occupation is not null;
+ОШИБКА:  ошибка синтаксиса (примерное положение: "celect")
+СТРОКА 1: celect * sum(weight) from people where occupation is not nul...
+          ^
+postgres=# select sum(weight) from people where occupation is not null;
+ sum
+------
+ 1875
+(1 ёЄЁюър)
+
+
+postgres=# select * from people where not email like '%gmail.com'
+postgres-# ;
+ id | first_name |  last_name  | age | gender |         address         |  phone_number   |            email
+ |         occupation          |      nationality      |                       education                       |  languages  | is_married | has_children | height | weight
+----+------------+-------------+-----+--------+-------------------------+-----------------+------------------------------+-----------------------------+-----------------------+-------------------------------------------------------+-------------+------------+--------------+--------+--------
+ 12 | Archer     | de Merida   |  84 | M      | 47 5th Trail            | 129.53.84.32    | ademeridab@t.co
+ | Computer Systems Analyst IV | Poland                | Pedagogical University of Kielce                      | Latvian     | t          | f            |     41 |     86
+ 16 | Luce       | Atwel       |  30 | M      | 5 Carioca Parkway       | 111.114.48.233  | latwelf@pcworld.com
+ | Paralegal                   | Philippines           | Our Lady of Fatima University                         | Indonesian  | t          | f            |     89 |     28
+ 21 | Artemus    | Roust       |  60 | M      | 87 Lakewood Parkway     | 71.241.55.36    | aroustk@theglobeandmail.com  | Social Worker               | Sweden                | Malmo University College                              | Finnish     | t          | f            |     49 |     64
+ 22 | Debora     | Vreiberg    |  55 | F      | 158 Miller Alley        | 190.192.87.75   | dvreibergl@skyrock.com       | Senior Developer            | Russia                | Nevsky Institute of Language and Culture              | Greek       | t          | f            |     94 |     37
+ 23 | Gustave    | Jahnke      |  23 | M      | 4764 Hagan Avenue       | 72.219.226.14   | gjahnkem@msu.edu
+ | Media Manager III           | Indonesia             | Sekolah Tinggi Akuntansi Negara (STAN)                | Albanian    | t          | f            |     24 |     26
+ 29 | Sari       | Crich       |  74 | F      | 77609 Evergreen Alley   | 63.63.100.182   | scrichs@stumbleupon.com      | Registered Nurse            | Indonesia             | Universitas Bunda Mulia Jakarta                       | Georgian    | t          | f            |     99 |     21
+ 30 | Valentino  | Rillstone   |  69 | M      | 46765 Aberg Terrace     | 7.0.20.137      | vrillstonet@sina.com.cn      | Assistant Manager           | Philippines           | Wesleyan University Philippines                       | Portuguese  | t          | f            |     44 |     43
+  5 | Estel      | Bruckenthal |  77 | F      | 3 Barby Circle          | 94.37.130.62    | ebruckenthal4@google.es      | developer                   | United States         | Niagara University                                    | English     | f          | f            |     89 |     30
+  7 | Lynn       | Linnell     |  22 | M      | 845 Meadow Vale Court   | 160.241.22.2    | llinnell6@huffingtonpost.com | developer                   | United States         | Arizona State University                              | Montenegrin | f          | f            |     86 |     24
+ 14 | Jacynth    | Elias       |  47 | F      | 23788 Schlimgen Park    | 61.253.209.224  | jeliasd@cornell.edu
+ | Assistant Media Planner     | Czech Republic        | University of New York in Prague                      | Kashmiri    | t          | t            |     53 |     49
+ 26 | Cob        | Borit       |  78 | M      | 8 Talisman Crossing     | 35.33.144.208   | cboritp@pagesperso-orange.fr | Paralegal                   | Russia                | Moscow State University of Geodesy and Cartography    | Kurdish     | t          | t            |     97 |     59
+ 28 | Manny      | Pepineaux   |  35 | M      | 66 International Circle | 75.133.39.246   | mpepineauxr@shop-pro.jp      | Nurse                       | Indonesia             | Universitas Bojonegoro                                | Bengali     | t          | t            |     93 |     19
+ 31 | Siffre     | Brenstuhl   |  39 | M      | 0247 Dunning Terrace    | 21.45.224.221   | sbrenstuhlu@qq.com
+ | Senior Sales Associate      | Mexico                | Universidad Lasallista Benavente                      | Burmese     | t          | t            |     72 |     99
+  3 | Lars       | Eggar       |  52 | M      | 58673 Gina Circle       | 248.250.99.167  | leggar2@ted.com
+ | developer                   | Ireland               | Athlone Institute of Technology                       | Danish      | f          | t            |     92 |     41
+  8 | Shelia     | Malling     |  77 | F      | 121 Welch Avenue        | 138.112.191.91  | smalling7@dmoz.org
+ | developer                   | China                 | Liaoning Technical University                         | Swati       | f          | f            |     11 |     32
+  9 | Devon      | Dollar      |  84 | F      | 4 Mcbride Crossing      | 240.219.156.237 | ddollar8@flavors.me
+ | developer                   | Czech Republic        | University of New York in Prague                      | Kannada     | f          | f            |     23 |     89
+ 11 | Thaxter    | Sockell     |  30 | M      | 364 Cherokee Hill       | 102.139.209.164 | tsockella@sourceforge.net    | developer                   | Japan                 | Tohoku Institute of Technology                        | Icelandic   | f          | f            |      8 |     50
+ 15 | Rickard    | Forrington  |  23 | M      | 3 Independence Trail    | 203.29.165.156  | rforringtone@statcounter.com | developer                   | Ecuador               | Universidad Tecnica de Machala                        | Somali      | f          | f            |     37 |     55
+ 24 | Carlita    | Brommage    |  81 | F      | 62520 Johnson Point     | 40.219.63.118   | cbrommagen@senate.gov        | developer                   | Palestinian Territory | Al-Quds University - The Arab University in Jerusalem | Afrikaans   | f          | f            |     39 |     96
+ 25 | Philis     | Hatfull     |  48 | F      | 636 Spaight Point       | 206.255.8.16    | phatfullo@epa.gov
+ | developer                   | Indonesia             | Universitas Nusa Cendana                              | Tetum       | f          | f            |     53 |      4
+ 33 | Giorgia    | Cutill      |  87 | F      | 7725 Acker Road         | 145.135.96.75   | gcutillw@skyrock.com         | developer                   | Portugal              | Escola Superior de Artes e Design                     | Lithuanian  | f          | f            |     93 |     75
+ 34 | Cristen    | Shinton     |  35 | F      | 0503 Sage Street        | 26.109.168.61   | cshintonx@tinyurl.com        | developer                   | Afghanistan           | Kabul Medical University                              | Amharic     | f          | f            |     79 |     11
+  2 | Abu        | Abuev       |  86 | M      | 319 Valley Edge Parkway | 179.126.50.126  | fprator1@ted.com
+ | developer                   | Peru                  | Universidad Particular Inca Garcilaso de la Vega      | Catalan     | f          | f            |     16 |     54
+ 10 | Ardyce     | Mainston    |  30 | F      | 968 Lindbergh Terrace   | 161.15.23.72    | amainston9@woothemes.com     | developer                   | Croatia               | University of Rijeka                                  | Armenian    | f          | t            |     17 |     72
+ 13 | Chiquia    | Seary       |  34 | F      | 40683 Coleman Parkway   | 140.216.159.251 | csearyc@angelfire.com        | developer                   | China                 | Shenyang Pharmaceutical University                    | Nepali      | f          | t            |     68 |     83
+ 17 | Mord       | Bendall     |  54 | M      | 37507 Memorial Pass     | 145.41.158.94   | mbendallg@bloomberg.com      | developer                   | Guatemala             | Universidad Rural de Guatemala                        | Tajik       | f          | t            |      3 |     20
+ 18 | Sallyanne  | Pryell      |  51 | F      | 0867 Dawn Hill          | 129.130.174.68  | spryellh@nbcnews.com         | developer                   | El Salvador           | Universidad Luterana Salvadorena                      | Polish      | f          | t            |     27 |     77
+ 19 | Jacquelyn  | Jaram       |  22 | F      | 71 Esch Avenue          | 54.121.155.97   | jjarami@google.ru
+ | developer                   | Philippines           | University of Regina Carmeli                          | Indonesian  | f          | t            |     68 |     87
+ 20 | Sybilla    | Hannon      |  37 | F      | 2 Sage Hill             | 165.148.89.126  | shannonj@patch.com
+ | developer                   | Armenia               | Russian-Armenian (Slavonic) State University          | Spanish     | f          | t            |      9 |     52
+ 27 | Sutton     | Teas        |  68 | M      | 5592 David Park         | 191.245.168.115 | steasq@icio.us
+ | developer                   | United States         | Indiana University (System)                           | Korean      | f          | t            |     42 |     93
+ 32 | Bogey      | Pretty      |  81 | M      | 6177 Bluestem Center    | 231.36.59.220   | bprettyv@about.me
+ | developer                   | Philippines           | Benguet State University                              | Croatian    | f          | t            |     96 |     15
+ 36 | Reagan     | Willavoys   |  58 | M      | 5 Schlimgen Park        | 97.9.2.171      | rwillavoysz@addthis.com      | developer                   | Portugal              | Escola Superior de Hotelaria e Turismo do Estoril     | Fijian      | f          | t            |     70 |     54
+ 37 | Creight    | Elvidge     |  69 | M      | 2 Reinke Trail          | 162.160.254.66  | celvidge10@ft.com
+ | developer                   | China                 | Fuzhou University                                     | Dhivehi     | f          | t            |     12 |     44
+(33 ёЄЁюъш)
+
+
+postgres=#
+postgres=#
+postgres=#
+postgres=#
+postgres=#
+postgres=#
+postgres=#
+postgres=#
+postgres=#
+postgres=#
+postgres=# select * from people where age=40 and occupation='developer';
+ id | first_name | last_name | age | gender | address | phone_number | email | occupation | nationality | education | languages | is_married | has_children | height | weight
+----+------------+-----------+-----+--------+---------+--------------+-------+------------+-------------+-----------+-----------+------------+--------------+--------+--------
+(0 ёЄЁюъ)
+
+
+postgres=# select * from people where age=54 and occupation='developer';
+ id | first_name | last_name | age | gender |       address       | phone_number  |          email          | occupation | nationality |           education            | languages | is_married | has_children | height | weight
+----+------------+-----------+-----+--------+---------------------+---------------+-------------------------+------------+-------------+--------------------------------+-----------+------------+--------------+--------+--------
+ 17 | Mord       | Bendall   |  54 | M      | 37507 Memorial Pass | 145.41.158.94 | mbendallg@bloomberg.com | developer  | Guatemala   | Universidad Rural de Guatemala | Tajik     | f          | t            |      3 |     20
+(1 ёЄЁюър)
+
+
+postgres=# select * distinct from people;
+ОШИБКА:  ошибка синтаксиса (примерное положение: "distinct")
+СТРОКА 1: select * distinct from people;
+                   ^
+postgres=#  select distinct nationality from people;
+           nationality
+----------------------------------
+ Croatia
+ El Salvador
+ Indonesia
+ Ecuador
+ Afghanistan
+ China
+ Russia
+ Czech Republic
+ Sweden
+ Armenia
+ Kyrgyz
+ Mexico
+ Peru
+ Palestinian Territory
+ Poland
+ Guatemala
+ Ireland
+ Democratic Republic of the Congo
+ Japan
+ Philippines
+ Portugal
+ United States
+(22 ёЄЁюъш)
+
+
+postgres=#
